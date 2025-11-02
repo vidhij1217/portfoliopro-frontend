@@ -330,71 +330,109 @@ const PortfolioForm = () => {
           </motion.section>
 
           {/* Social Links Section */}
-          <motion.section
-            className="portfolio-social-section"
-            variants={itemVariants}
-          >
-            <motion.h2 className="section-title" variants={itemVariants}>
-              Find Me On
-            </motion.h2>
-            <motion.p className="social-subtitle" variants={itemVariants}>
+          <section className="portfolio-social-section">
+            <h2 className="section-title">Find Me On</h2>
+            <p className="social-subtitle">
               Feel free to <span className="highlight">connect</span> with me
-            </motion.p>
-            <motion.div
-              className="social-icons-container"
-              variants={itemVariants}
-            >
-              {socialIcons.map((social) => (
-                <div
-                  key={social.key}
-                  className="social-icon-wrapper"
-                  onMouseEnter={() => setActiveTooltip(social.key)}
-                  onMouseLeave={() => setActiveTooltip(null)}
-                >
-                  <input
-                    type="url"
-                    name={`social-${social.key}`}
-                    value={formData.socialLinks[social.key]}
-                    onChange={handleChange}
-                    placeholder={`Enter your ${social.label} link`}
-                    className="social-link-input"
-                  />
-                  <div className="social-icon-container">
-                    <a
-                      href={formData.socialLinks[social.key] || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="social-icon-link"
-                      onClick={(e) => {
-                        if (!formData.socialLinks[social.key]) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      <div className="social-icon">
-                        <i className={`bi ${social.icon}`}></i>
-                      </div>
-                    </a>
-                    {formData.socialLinks[social.key] && (
+            </p>
+
+            <div className="social-icons-container">
+              {socialIcons
+                .filter((social) =>
+                  formData.socialLinks.hasOwnProperty(social.key)
+                )
+                .map((social) => (
+                  <div
+                    key={social.key}
+                    className="social-icon-wrapper"
+                    onMouseEnter={() => setActiveTooltip(social.key)}
+                    onMouseLeave={() => setActiveTooltip(null)}
+                  >
+                    <input
+                      type="url"
+                      name={`social-${social.key}`}
+                      value={formData.socialLinks[social.key]}
+                      onChange={handleChange}
+                      placeholder={`Enter your ${social.label} link`}
+                      className="social-link-input"
+                    />
+                    <div className="social-icon-container">
+                      <a
+                        href={formData.socialLinks[social.key] || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-icon-link"
+                        onClick={(e) => {
+                          if (!formData.socialLinks[social.key]) {
+                            e.preventDefault();
+                          }
+                        }}
+                      >
+                        <div className="social-icon">
+                          <i className={`bi ${social.icon}`}></i>
+                        </div>
+                      </a>
                       <button
                         type="button"
-                        onClick={() => removeSocialLink(social.key)}
+                        onClick={() => {
+                          const updatedLinks = { ...formData.socialLinks };
+                          delete updatedLinks[social.key];
+                          setFormData((prev) => ({
+                            ...prev,
+                            socialLinks: updatedLinks,
+                          }));
+                        }}
                         className="remove-social-btn"
+                        title="Remove Icon"
                       >
                         <i className="bi bi-x"></i>
                       </button>
+                    </div>
+
+                    {activeTooltip === social.key && (
+                      <div className="tooltip">
+                        Enter your {social.label} profile link
+                      </div>
                     )}
                   </div>
-                  {activeTooltip === social.key && (
-                    <div className="tooltip">
-                      Enter your {social.label}{" "}
-                      {social.key === "github" ? "profile" : "profile"} link
-                    </div>
-                  )}
+                ))}
+
+              {/* Add back removed icons */}
+              {Object.keys(formData.socialLinks).length <
+                socialIcons.length && (
+                <div className="add-icon-dropdown">
+                  <label>Add Icon:</label>
+                  <select
+                    onChange={(e) => {
+                      const key = e.target.value;
+                      if (key) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          socialLinks: {
+                            ...prev.socialLinks,
+                            [key]: "",
+                          },
+                        }));
+                        e.target.value = "";
+                      }
+                    }}
+                  >
+                    <option value="">Select</option>
+                    {socialIcons
+                      .filter(
+                        (social) =>
+                          !formData.socialLinks.hasOwnProperty(social.key)
+                      )
+                      .map((social) => (
+                        <option key={social.key} value={social.key}>
+                          {social.label}
+                        </option>
+                      ))}
+                  </select>
                 </div>
-              ))}
-            </motion.div>
-          </motion.section>
+              )}
+            </div>
+          </section>
 
           {/* Projects Section */}
           <motion.section
