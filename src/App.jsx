@@ -13,6 +13,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import AskAI from "./pages/AskAI";
 import Contact from "./pages/Contact";
+import PortfolioForm from "./pages/PortfolioForm";
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-portfolio"
+            element={
+              <ProtectedRoute>
+                <PortfolioForm />
               </ProtectedRoute>
             }
           />

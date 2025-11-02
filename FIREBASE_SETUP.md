@@ -86,3 +86,5 @@ After setting up Firebase Authentication:
 - User state persists across page refreshes
 - You're ready to integrate Firestore for storing user data and portfolios
 
+
+
